@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const port = process.env.PORT || 3001;
 
 const app = express();
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //para poder coger la ruta de la carpeta htt://localhost:3001/img/nombrefoto.jpg

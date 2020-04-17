@@ -15,6 +15,7 @@ function endPoint(app){
 
      //todos los productos
      router.get('/allProduct', (req, res) => {
+
         Product.find({}, (err, product) => {
             if(err) return res.status(500).json({message:`error al realizar la peticion: ${err}`});
             if(!product) return res.status(404).json({message: `No existen los productos`});
@@ -26,6 +27,7 @@ function endPoint(app){
      //productos por id
      router.get('/:id', (req, res) => {
          let id = req.params.id;
+         
          Product.findById(id, (err, product) => {
             if(err) return res.status(500).json({message:`error al realizar la peticion: ${err}`});
             if(!product) return res.status(404).json({message: `No existen los productos`});
@@ -43,12 +45,11 @@ function endPoint(app){
          product.picture = 'http://localhost:3001/img/'+aux[1];
          product.price = req.body.price;
          product.description = req.body.description;
+         product.quantity = req.body.quantity
 
          product.save((err, productSave) => {
             if(err) return res.status(500).json({message:`error al realizar la peticion: ${err}`});
-
             // EmailCtrl.sendEmail(req, res);
-
             res.status(200).json({data: productSave});
          })
      })
@@ -57,9 +58,14 @@ function endPoint(app){
     router.put('/update/:id', (req, res) => {
         let id = req.params.id;
         let update = req.body;
+        
+        console.log(id)
+        console.log(req.body)
 
         Product.findByIdAndUpdate(id, update, (err, productUpdate) => {
             if(err) return res.status(500).json({message:`error al realizar la peticion: ${err}`});
+
+            if(!productUpdate) return res.status(500).send({message: 'No retornó objeto actualizado'})
 
             res.status(200).json({data: productUpdate});
         })
